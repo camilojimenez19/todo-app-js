@@ -30,6 +30,7 @@ export const App = (elementId) => {
 
     /** HTML references */
     const newDescriptionInput = document.querySelector(ELEMENT_IDS.NEW_TODO_INPUT)
+    const toDoListUl = document.querySelector(ELEMENT_IDS.TODO_LIST)
 
 
     /** Listeners */
@@ -43,6 +44,12 @@ export const App = (elementId) => {
         toDoStore.addToDo(event.target.value)
         displayToDos()
         event.target.value = ''
+    });
+
+    toDoListUl.addEventListener('click', (event) => {
+        const element = event.target.closest('[data-id]')
+        toDoStore.toggleToDo(element.getAttribute('data-id'))
+        displayToDos()
     })
 
 }
