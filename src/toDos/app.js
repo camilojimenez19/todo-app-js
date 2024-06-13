@@ -6,7 +6,7 @@ import toDoStore from '../store/toDo.store';
 
 const ELEMENT_IDS = {
     TODO_LIST: '.todo-list',
-    NEW_TODO_INPUT: '#new-todo-input'
+    NEW_TODO_INPUT: '#new-todo-input',  
 }
 
 /**
@@ -49,6 +49,15 @@ export const App = (elementId) => {
     toDoListUl.addEventListener('click', (event) => {
         const element = event.target.closest('[data-id]')
         toDoStore.toggleToDo(element.getAttribute('data-id'))
+        displayToDos()
+    })
+
+    toDoListUl.addEventListener('click', (event) => {
+        const isDestroyElement = event.target.className === 'destroy'
+        const element = event.target.closest('[data-id]')
+        if(!element || !isDestroyElement) return;
+
+        toDoStore.deleteToDo(element.getAttribute('data-id'))
         displayToDos()
     })
 
