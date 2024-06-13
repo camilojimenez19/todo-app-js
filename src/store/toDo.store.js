@@ -17,14 +17,25 @@ const state = {
 }
 
 const initStore = () => {
-    console.log(state)
+    loadStore()
     console.log('InitStore 🥑');
 }
 
 const loadStore = () => {
-    throw new Error('Not implemented')
+    if(!localStorage.getItem('state')) return;
+    
+    const {
+        todos = [],
+        filter = Filters.ALL
+    } = JSON.parse(localStorage.getItem('state'))
+
+    state.todos = todos
+    state.filter = filter
 }
 
+const saveStateToLocalStorage = () => {
+    localStorage.setItem('state', JSON.stringify(state))
+}
 
 /**
  * Get ToDo's
@@ -36,9 +47,9 @@ const getToDos = (filter = Filters.ALL) => {
         case Filters.ALL:
             return [...state.todos]
         case Filters.COMPLETED:
-            return state.todos.filter( todo => todo.done)
+            return state.todos.filter(todo => todo.done)
         case Filters.PENDING:
-            return state.todos.filter( todo => !todo.done)
+            return state.todos.filter(todo => !todo.done)
         default:
             throw new Error(`Option ${filter} is not valid.`)
     }
@@ -49,8 +60,9 @@ const getToDos = (filter = Filters.ALL) => {
  * @param {String} description 
  */
 const addToDo = (description) => {
-    if(!description) throw new Error('Description is required')
+    if (!description) throw new Error('Description is required')
     state.todos.push(new ToDo(description))
+    saveStateToLocalStorage()
 }
 
 /**
@@ -59,10 +71,11 @@ const addToDo = (description) => {
  */
 const toggleToDo = (todoId) => {
     state.todos = state.todos.map(todo => {
-        if(todo.id === todoId)
+        if (todo.id === todoId)
             todo.done = !todo.done
         return todo
-    }) 
+    })
+    saveStateToLocalStorage()
 }
 
 /**
@@ -71,6 +84,7 @@ const toggleToDo = (todoId) => {
  */
 const deleteToDo = (todoId) => {
     state.todos = state.todos.filter(todo => todo.id !== todoId)
+    saveStateToLocalStorage()
 }
 
 /**
@@ -78,6 +92,7 @@ const deleteToDo = (todoId) => {
  */
 const deleteCompleted = () => {
     state.todos = state.todos.filter(todo => !todo.done)
+    saveStateToLocalStorage()
 }
 
 /**
@@ -85,9 +100,10 @@ const deleteCompleted = () => {
  * @param {Filters} newFilter option filter
  */
 const setFilter = (newFilter = Filters.ALL) => {
-    if(!Object.keys(Filters).includes(newFilter))
+    if (!Object.keys(Filters).includes(newFilter))
         throw new Error('The selected filter is invalid')
     state.filter = newFilter
+    saveStateToLocalStorage()
 }
 
 /**
