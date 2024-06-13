@@ -1,7 +1,7 @@
 import baseHTML from './app.html?raw'
 import { ToDo } from './models/toDo';
 import ToDoStore, { Filters } from '../store/toDo.store'
-import { renderToDos } from './use-cases';
+import { renderPendingToDos, renderToDos } from './use-cases';
 import toDoStore from '../store/toDo.store';
 
 const ELEMENT_IDS = {
@@ -9,6 +9,7 @@ const ELEMENT_IDS = {
     NEW_TODO_INPUT: '#new-todo-input',
     CLEAR_COMPLETED_BUTTON: '.clear-completed',
     TOTO_FILTER: '.filtro',
+    PENDING_COUNT_LABEL: '#pending-count',
 }
 
 /**
@@ -16,10 +17,15 @@ const ELEMENT_IDS = {
  * @param {String} elementId 
  */
 export const App = (elementId) => {
-
+    
     const displayToDos = () => {
         const toDos = ToDoStore.getToDos(ToDoStore.getCurrentFilter())
         renderToDos(ELEMENT_IDS.TODO_LIST, toDos)
+        updatePendingCount()
+    }
+
+    const updatePendingCount = () => {
+        renderPendingToDos(ELEMENT_IDS.PENDING_COUNT_LABEL)
     }
 
     /** When the app started */
@@ -39,12 +45,12 @@ export const App = (elementId) => {
 
     /** Listeners */
     newDescriptionInput.addEventListener('keyup', (event) => {
-        
-        if(
+
+        if (
             event.keyCode !== 13 ||
             event.target.value.trim().length === 0
         ) return
-        
+
         toDoStore.addToDo(event.target.value)
         displayToDos()
         event.target.value = ''
@@ -59,18 +65,18 @@ export const App = (elementId) => {
     toDoListUl.addEventListener('click', (event) => {
         const isDestroyElement = event.target.className === 'destroy'
         const element = event.target.closest('[data-id]')
-        if(!element || !isDestroyElement) return;
+        if (!element || !isDestroyElement) return;
 
         toDoStore.deleteToDo(element.getAttribute('data-id'))
         displayToDos()
     })
 
-    clearCompleteButton.addEventListener('click', () => { 
+    clearCompleteButton.addEventListener('click', () => {
         toDoStore.deleteCompleted()
         displayToDos()
     })
 
-    filtersList.forEach( element => {
+    filtersList.forEach(element => {
         element.addEventListener('click', event => {
             filtersList.forEach(el => el.classList.remove('selected'))
             event.target.classList.add('selected')
