@@ -1,6 +1,6 @@
 import { ToDo } from "../toDos/models/toDo";
 
-const Filters = {
+export const Filters = {
     ALL: 'all',
     COMPLETED: 'completed',
     PENDING: 'pending'
@@ -96,7 +96,7 @@ const deleteCompleted = () => {
  * @param {Filters} newFilter option filter
  */
 const setFilter = (newFilter = Filters.ALL) => {
-    if (!Object.keys(Filters).includes(newFilter))
+    if (!Object.values(Filters).includes(newFilter))
         throw new Error('The selected filter is invalid')
     state.filter = newFilter
     saveStateToLocalStorage()
