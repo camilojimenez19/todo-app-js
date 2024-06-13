@@ -6,7 +6,8 @@ import toDoStore from '../store/toDo.store';
 
 const ELEMENT_IDS = {
     TODO_LIST: '.todo-list',
-    NEW_TODO_INPUT: '#new-todo-input',  
+    NEW_TODO_INPUT: '#new-todo-input',
+    CLEAR_COMPLETED_BUTTON: '.clear-completed'
 }
 
 /**
@@ -31,6 +32,7 @@ export const App = (elementId) => {
     /** HTML references */
     const newDescriptionInput = document.querySelector(ELEMENT_IDS.NEW_TODO_INPUT)
     const toDoListUl = document.querySelector(ELEMENT_IDS.TODO_LIST)
+    const clearCompleteButton = document.querySelector(ELEMENT_IDS.CLEAR_COMPLETED_BUTTON)
 
 
     /** Listeners */
@@ -58,6 +60,11 @@ export const App = (elementId) => {
         if(!element || !isDestroyElement) return;
 
         toDoStore.deleteToDo(element.getAttribute('data-id'))
+        displayToDos()
+    })
+
+    clearCompleteButton.addEventListener('click', () => { 
+        toDoStore.deleteCompleted()
         displayToDos()
     })
 

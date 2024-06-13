@@ -8,11 +8,7 @@ const Filters = {
 
 
 const state = {
-    todos: [
-        new ToDo('Piedra del alma'),
-        new ToDo('Piedra del infinito'),
-        new ToDo('Piedra del tiempo'),
-    ],
+    todos: [],
     filter: Filters.ALL
 }
 
